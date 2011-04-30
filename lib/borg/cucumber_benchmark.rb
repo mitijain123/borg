@@ -11,8 +11,7 @@ module Borg
     def after_feature(feature)
       time_taken = Time.now - @start_time
       filename = feature.file.gsub(/#{Rails.root}/,'')
-#      failed = feature.instance_variable_get(:@feature_elements).first.status
-      puts "Feature #{filename} took #{time_taken} seconds to run"
+      puts "Feature #{filename} took #{time_taken} seconds to run and status failed? #{failed?(feature)}"
       redis[filename] = [time_taken, failed?(feature)]
     end
 

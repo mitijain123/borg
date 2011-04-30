@@ -9,10 +9,15 @@ When /^I put them in pot$/ do
 end
 
 Then /^I should get food$/ do
-  undefined_method_to_fail
+  print '.'
   sleep 0.1
 end
 
 And /^I sleep for (\d+) seconds$/ do |time|
   sleep(time.to_i)
+end
+
+Then /^I should fail$/ do
+  undefined_method_for_failure
+  sleep 0.1
 end

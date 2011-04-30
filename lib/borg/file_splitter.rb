@@ -10,9 +10,11 @@ module Borg
     end
 
     def prepare_for_splitting
+      failed_files = []
+      passed_files = []
       failed_and_passed_files = history.group_by(&:file_failed)
-      failed_files = failed_and_passed_files[1].sort {|x,y| y.running_time <=> x.running_time }
-      passed_files = failed_and_passed_files[0].sort {|x,y| y.running_time <=> x.running_time }
+      failed_files = failed_and_passed_files[1].sort {|x,y| y.running_time <=> x.running_time } unless failed_and_passed_files[1].blank?
+      passed_files = failed_and_passed_files[0].sort {|x,y| y.running_time <=> x.running_time } unless failed_and_passed_files[0].blank?
       @history = failed_files + passed_files
       total_sum = sum(history)
       average = total_sum/history.length
