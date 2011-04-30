@@ -9,7 +9,7 @@ When /^I put them in pot$/ do
 end
 
 Then /^I should get food$/ do
-  print '.'
+  undefined_method_to_fail
   sleep 0.1
 end
 

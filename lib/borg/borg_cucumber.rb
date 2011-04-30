@@ -18,14 +18,19 @@ module Borg
     end
 
     def feature_running_time(filename)
-      (redis[filename] || 240).to_i
+      (redis[filename][0] || 240).to_i
+    end
+
+    #default is one so that new files can run first
+    def feature_failed_last_build(filename)
+      (redis[filename][1] || 1).to_i
     end
 
     def add_to_redis(worker_count)
       file_splitter = FileSplitter.new(worker_count)
       Dir["#{Rails.root}/features/**/*.feature"].each do |fl|
         filename = fl.gsub(/#{Rails.root}/,'')
-        file_splitter.history << RunHistory.new(filename,feature_running_time(filename))
+        file_splitter.history << RunHistory.new(filename,feature_running_time(filename), feature_failed_last_build(filename))
       end
       @file_splits = file_splitter.split()
       feature_files = file_splits.map do |files|

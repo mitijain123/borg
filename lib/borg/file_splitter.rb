@@ -1,5 +1,5 @@
 module Borg
-  RunHistory = Struct.new(:filename, :running_time)
+  RunHistory = Struct.new(:filename, :running_time, :file_failed)
   class FileSplitter
     attr_accessor :history, :subarrays, :groups
 
@@ -10,7 +10,10 @@ module Borg
     end
 
     def prepare_for_splitting
-      @history = history.sort {|x,y| y.running_time <=> x.running_time }
+      failed_and_passed_files = history.group_by(&:file_failed)
+      failed_files = failed_and_passed_files[1].sort {|x,y| y.running_time <=> x.running_time }
+      passed_files = failed_and_passed_files[0].sort {|x,y| y.running_time <=> x.running_time }
+      @history = failed_files + passed_files
       total_sum = sum(history)
       average = total_sum/history.length
 
